@@ -1,0 +1,52 @@
+
+// Online IDE - Code Editor, Compiler, Interpreter
+import java.util.Scanner;//
+public class Main
+{
+    public static void main(String[] args) {
+        System.out.println("Welcome to Online IDE!! Happy Coding :)/n/n/n");
+        Scanner availityInputObj=new Scanner (System.in);//
+        System.out.println("Please input String :)");
+        String inputStr= availityInputObj.nextLine();
+        System.out.println("Is String properly closed:  " + IsStringProper(inputStr));
+    };
+    
+    public static boolean IsStringProper (String inputStr) 
+    {
+        boolean bStr=true;
+        int ip=0;
+        int ic=0;
+        int is=0;
+
+    for (int i=0;i< inputStr.length(); i++)
+        {
+            switch (inputStr.charAt(i))
+            {
+                case '(': ip++;
+                            break;
+                case ')': ip--;
+                            break;
+                                            
+                case '[': is++;
+                            break;
+                case ']': is--;
+                            break;
+                            
+                case '{': ip++;
+                            break;
+                case '}': ip--;
+                            break;
+                            
+            }
+            if (ip<0) return false;
+            if (is<0) return false;
+            if (ic<0) return false;
+        };
+        if (ip!=0)  bStr=false;
+        if (is!=0)  bStr=false;
+        if (ic!=0)  bStr=false;
+        
+        return bStr;
+    }
+
+}

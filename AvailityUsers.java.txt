@@ -1,0 +1,153 @@
+
+
+// Online IDE - Code Editor, Compiler, Interpreter
+import java.util.*;//
+import java.util.stream.Collectors;
+import java.io.*;
+
+public class Main
+{
+    public static void main(String[] args) {
+        System.out.println("Welcome to Online IDE!! Happy Coding :)/n/n/n");
+        ArrayList <AvailityUser> availityUsers=new ArrayList<AvailityUser> ();
+
+        try {
+        File file=new File("C:/Users/marlb/OneDrive/Desktop/availityCVS.txt");  //data should be here
+     //   BufferedReader bRead=new BufferedReader(new FileReader(file)); //use it for data file input
+         String inputStr;
+        // we can not use local data file on this online IDE for now,  
+        // we input data from standard System.In for testing
+        Scanner availityInputObj=new Scanner (System.in);//
+        System.out.println("input String ...");
+        // sample data here
+/*
+123456, john, Price, 1, Health Aid
+224567, Biden, Rice, 2, Health corp
+123456, john, Price, 2, Health Aid
+22457, Diden, Yes, 1, Health corp
+224567, Biden, Rice, 4, Health corp
+*/
+int n=0;
+String []userData;
+        while (( inputStr= availityInputObj.nextLine()).length()!=0) //use this for  Scanner input
+     //   while ((inputStr=bRead.readLine()).length()!=0) // use this for data file input
+        {
+        userData =inputStr.split(",");
+        AvailityUser aUser= new AvailityUser(userData);
+        System.out.println("n="+n++);
+        insertUser(aUser, availityUsers);
+        };
+    System.out.println("total data entries="+n);
+    
+        }
+            catch (Exception e) {
+            System.out.println( "exception found:  "+e.toString());
+        }finally
+        {
+            System.out.println("done input, User data are reigstered to system, sorting now... ");
+            };
+        // finally sort the Users by first name and last name
+        //Compare by first name and then last name
+        Comparator<AvailityUser> compareByName = Comparator
+                                                .comparing(AvailityUser::getfirstname)
+                                                .thenComparing(AvailityUser::getlastname);
+        System.out.println("before sort..."); 
+        for (AvailityUser eachUser:availityUsers)
+        {
+          System.out.println("UserId = "+ eachUser.getUserId()+ " first name ="
+           +eachUser.getfirstname()+ " Last name = "+eachUser.getlastname()
+           + "  Ver="+eachUser.getVersion());
+        }
+		ArrayList<AvailityUser>  sortedArrayUsers=availityUsers.stream().sorted(compareByName)
+                    .collect(Collectors.toCollection(ArrayList::new)); 
+   		List<AvailityUser>  sortedListUsers=availityUsers.stream().sorted(compareByName)
+                    .collect(Collectors.toList()); 
+        System.out.println("after sort..."); 
+        for (AvailityUser eachUser:sortedArrayUsers)
+        {
+            System.out.println("UserId = "+ eachUser.getUserId()+ " first name ="
+           +eachUser.getfirstname()+ " Last name = "+eachUser.getlastname()
+           + "  Ver="+eachUser.getVersion());
+        }    
+      };
+    
+    private static void insertUser( AvailityUser aUser, ArrayList availityUsers)
+    {
+        boolean insertNew=true;
+        Iterator <AvailityUser> itr= availityUsers.iterator();
+        while (itr.hasNext())
+        {
+           AvailityUser iUser=itr.next();
+           System.out.println( "inputed user="+ aUser.getUserId()+" ->  searching existing users ...  " + iUser.getUserId());
+           if (iUser.getUserId().compareTo(aUser.getUserId())==0)
+            {
+                insertNew=false; // not insert Dupplicates
+                System.out.println(" found Dup UserId = "+aUser.getUserId());
+                if (iUser.getVersion()<aUser.getVersion())
+                {
+                    // replace 
+                    itr.remove();
+                    insertNew=true; //insert new after  old
+                    System.out.println(" Old Dup removed due to lower Version");
+                }
+            }
+            
+        }
+        System.out.println(" Added New User =" + insertNew);
+        if (insertNew)  availityUsers.add(aUser);// warning: 'uses unchecked or unsafe operation'
+        // java 8 
+        
+    }
+
+
+}
+
+class AvailityUser 
+    {
+    String UserId;
+    String firstname;
+    String lastname;
+    int Version;
+    String InsuranceCompany;
+    AvailityUser(String [] userData)
+        {
+        UserId=userData[0].trim();
+        firstname=userData[1].trim();
+        lastname=userData[2].trim();
+        Version=Integer.parseInt(userData[3].trim());
+        InsuranceCompany=userData[4].trim();
+        } 
+  /*  AvailityUser (AvailityUser aUser)
+    {
+      UserId=aUser.UserId;
+      firstname=aUser.firstname;
+      lastname=aUser.lastname;
+      Version=aUser.Version;
+      InsuranceCompany=aUser.InsuranceCompany;
+    }
+    */
+    String getUserId()
+    {
+        return UserId;
+    }
+    int getVersion()
+    {
+        return Version;
+    }
+    String getfirstname()
+    {
+        return firstname;
+    }
+    String getlastname()
+    {
+        return lastname;
+    }
+    void printUser()
+    {
+        System.out.println(UserId+firstname+lastname+Version+InsuranceCompany);
+    }
+   public int compareTo(AvailityUser o) {
+  
+        return this.getfirstname().compareTo(o.getfirstname());
+        }
+    }
